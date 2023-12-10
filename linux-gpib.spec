@@ -51,7 +51,7 @@
 
 Name:           linux-gpib
 Version:        4.3.6
-Release:        11.%{svndate}svn%{svnrev}%{?dist}
+Release:        9.%{svndate}svn%{svnrev}%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
