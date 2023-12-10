@@ -681,7 +681,7 @@ fi
 
 
 %changelog
-* Sun Dec 9 2023 Michael Katzmann <vk2bea-at-gmail-dot-com> - 4.3.6-10.20231130svnr2070
+* Sat Dec 9 2023 Michael Katzmann <vk2bea-at-gmail-dot-com> - 4.3.6-10.20231130svnr2070
 - Fix removal of old modules which sometimes cause installation failures
 * Sun Feb 24 2019 Colin Samples <colin-dot-samples-at-gmail-dot-com> - 4.2.0-2.20190107svn1809
 - Fix Agilent adapter configuation
