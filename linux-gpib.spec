@@ -16,8 +16,8 @@
 %bcond_without tcl
 
 
-%global svnrev r2088
-%global svndate 20240327
+%global svnrev r2103
+%global svndate 20240427
 
 %global _hardened_build 1
 
@@ -51,7 +51,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        1.%{svndate}svn%{svnrev}%{?dist}
+Release:        10.%{svndate}svn%{svnrev}%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -78,7 +78,6 @@ Patch2:         %{name}-fix-tcl-manpage.patch
 Patch3:         %{name}-kernel-dont-ignore-errors.patch
 Patch4:         %{name}-kernel-fix-epel-build.patch
 Patch5:         %{name}-pkg-version.patch
-Patch6:         %{name}-fix-tcl-ibcmds.patch
 
 Requires:       dkms-%{name}
 
@@ -272,7 +271,6 @@ HTML and PDF documentation for %{name}.
 # %patch 3 -p1
 %{?el7:%patch 4 -p1}
 %patch 5 -p1
-%patch 6 -p1
 
 pushd %{name}-kernel
 sed -e 's/__VERSION_STRING/%{version}/g' %{SOURCE4} > dkms.conf
@@ -684,6 +682,16 @@ fi
 
 
 %changelog
+* Sat Apr 27 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2103
+- r2103 sleep/resume for NI-USB-HS & Agilent 82357a
+* Fri Apr 12 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2096
+- r2096 sleep/resume for NI-USB-HS
+* Fri Apr 05 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2093
+- r2093 sleep/resume for NI-USB-HS
+* Fri Apr 05 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2091
+- r2090 sleep/resume for Agilent 82357a
+* Sat Mar 30 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2090
+- r2090 patch 6 incorporated upstream
 * Wed Mar 27 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2088
 - r2088 Fix for Fedora 40
 * Sat Mar 02 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2085
