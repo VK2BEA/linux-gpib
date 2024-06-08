@@ -16,8 +16,8 @@
 %bcond_without tcl
 
 
-%global svnrev r2103
-%global svndate 20240427
+%global gitrev 4c5ef2e699c94c2e184b65a04081e0746b207626
+%global gitdate 20240608
 
 %global _hardened_build 1
 
@@ -51,7 +51,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        10.%{svndate}svn%{svnrev}%{?dist}
+Release:        11.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -62,7 +62,12 @@ URL:            http://linux-gpib.sourceforge.net/
 # We use zip instead of tar.gz since that is what is on SourceForge
 #  $ svn export -r <svnrev> https://svn.code.sf.net/p/linux-gpib/code/trunk linux-gpib-code-<svnrev>-trunk
 #  $ zip -r linux-gpib-code-<svnrev>-trunk.zip linux-gpib-code-<svnrev>-trunk
-Source0:        %{name}-code-%{svnrev}-trunk.zip
+# as of Jun 6th 2024, use git
+# git clone https://git.code.sf.net/p/linux-gpib/git linux-gpib-git
+# git reset --hard 4c5ef2e6
+# zip -r linux-gpib-git-4c5ef2e6.zip linux-gpib-git
+
+Source0:        %{name}-git-%{gitrev}.zip
 
 Source1:        %{name}-docs.xml
 Source2:        60-%{name}-adapter.rules
@@ -263,7 +268,7 @@ HTML and PDF documentation for %{name}.
 
 
 %prep
-%setup -q -n %{name}-code-%{svnrev}-trunk
+%setup -q -n %{name}-git-%{gitrev}
 
 %patch 0 -p1
 %patch 1 -p1
@@ -682,6 +687,8 @@ fi
 
 
 %changelog
+* Sat Jun 08 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.4c5ef2e6
+- 4c5ef2e6 Optionally suppress stderr output from ibdev()
 * Sat Apr 27 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2103
 - r2103 sleep/resume for NI-USB-HS & Agilent 82357a
 * Fri Apr 12 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2096
