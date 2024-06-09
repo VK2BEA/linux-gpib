@@ -16,8 +16,8 @@
 %bcond_without tcl
 
 
-%global gitrev 4c5ef2e699c94c2e184b65a04081e0746b207626
-%global gitdate 20240608
+%global gitrev 9813ff8f6cad92213d1e52e1ea2b2dbb9f4d0cf5
+%global gitdate 20240609
 
 %global _hardened_build 1
 
@@ -51,7 +51,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        11.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        12.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -687,6 +687,8 @@ fi
 
 
 %changelog
+* Sun Jun 09 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.9813ff8f
+- 9813ff8f Add ready responses for NI GPIB-USB-HS bona fide genuine board
 * Sat Jun 08 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.4c5ef2e6
 - 4c5ef2e6 Optionally suppress stderr output from ibdev()
 * Sat Apr 27 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - svnr2103
