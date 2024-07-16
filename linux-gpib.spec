@@ -15,9 +15,8 @@
 %bcond_without python3
 %bcond_without tcl
 
-
-%global gitrev 9813ff8f6cad92213d1e52e1ea2b2dbb9f4d0cf5
-%global gitdate 20240609
+%global gitrev b74cc7366804b735334008f40b8d9e72f5d8d791
+%global gitdate 20240716
 
 %global _hardened_build 1
 
@@ -51,7 +50,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        12.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        14.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -687,6 +686,10 @@ fi
 
 
 %changelog
+* Tue Jul 16 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.bf4cc736
+- REN will automatically be asserted when the board becomes system controller
+* Thu Jul 11 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.bfa01fea
+- bfa01fea Fix memory leak when open fails
 * Sun Jun 09 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.9813ff8f
 - 9813ff8f Add ready responses for NI GPIB-USB-HS bona fide genuine board
 * Sat Jun 08 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.4c5ef2e6
