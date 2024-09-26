@@ -11,12 +11,16 @@
 %else
 %bcond_without php
 %endif
+%if 0%{?fedora} >= 41
+%bcond_with python2
+%else
 %bcond_without python2
+%endif
 %bcond_without python3
 %bcond_without tcl
 
-%global gitrev b74cc7366804b735334008f40b8d9e72f5d8d791
-%global gitdate 20240716
+%global gitrev 778a98df97a2b89d401a54515bad3ce2346dd3af
+%global gitdate 20240920
 
 %global _hardened_build 1
 
@@ -50,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        14.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        15.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -79,7 +83,7 @@ Patch0:         %{name}-nodevnodes.patch
 # We package our own udev rules and firmware loader
 Patch1:         %{name}-remove-usb-autotools.patch
 Patch2:         %{name}-fix-tcl-manpage.patch
-Patch3:         %{name}-kernel-dont-ignore-errors.patch
+#Patch3:         %{name}-kernel-dont-ignore-errors.patch
 Patch4:         %{name}-kernel-fix-epel-build.patch
 Patch5:         %{name}-pkg-version.patch
 
@@ -686,6 +690,8 @@ fi
 
 
 %changelog
+* Fri Sep 20 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.346dd3af
+- Remove python2 default build with fedora 41
 * Tue Jul 16 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.bf4cc736
 - REN will automatically be asserted when the board becomes system controller
 * Thu Jul 11 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.bfa01fea
