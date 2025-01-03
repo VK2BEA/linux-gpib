@@ -19,8 +19,8 @@
 %bcond_without python3
 %bcond_without tcl
 
-%global gitrev 778a98df97a2b89d401a54515bad3ce2346dd3af
-%global gitdate 20240920
+%global gitrev f50f2cbc61f0c7142d87c23229cf8da1ced79837
+%global gitdate 20250101
 
 %global _hardened_build 1
 
@@ -54,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        15.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        16.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -690,6 +690,8 @@ fi
 
 
 %changelog
+* Thu Jan 01 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.346dd3af
+- f50f2cbc61f0c7142d87c23229cf8da1ced79837 Update to latest SVN
 * Fri Sep 20 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.346dd3af
 - Remove python2 default build with fedora 41
 * Tue Jul 16 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.bf4cc736
