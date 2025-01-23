@@ -1,4 +1,4 @@
-%if 0%{?el8}
+%if 0%{?rhel} >= 8
 %bcond_with docs
 %bcond_with guile
 %else
@@ -11,7 +11,7 @@
 %else
 %bcond_without php
 %endif
-%if 0%{?fedora} >= 41
+%if 0%{?fedora} >= 41 || 0%{?rhel} >= 10
 %bcond_with python2
 %else
 %bcond_without python2
@@ -20,7 +20,7 @@
 %bcond_without tcl
 
 %global gitrev f50f2cbc61f0c7142d87c23229cf8da1ced79837
-%global gitdate 20250101
+%global gitdate 20250122
 
 %global _hardened_build 1
 
@@ -54,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        16.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        17.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -83,7 +83,7 @@ Patch0:         %{name}-nodevnodes.patch
 # We package our own udev rules and firmware loader
 Patch1:         %{name}-remove-usb-autotools.patch
 Patch2:         %{name}-fix-tcl-manpage.patch
-#Patch3:         %{name}-kernel-dont-ignore-errors.patch
+Patch3:         %{name}-kernel-dont-ignore-errors.patch
 Patch4:         %{name}-kernel-fix-epel-build.patch
 Patch5:         %{name}-pkg-version.patch
 
@@ -276,7 +276,9 @@ HTML and PDF documentation for %{name}.
 %patch 0 -p1
 %patch 1 -p1
 %patch 2 -p1
-# %patch 3 -p1
+%if 0
+%{patch 3 -p1}
+%endif
 %{?el7:%patch 4 -p1}
 %patch 5 -p1
 
@@ -690,7 +692,9 @@ fi
 
 
 %changelog
-* Thu Jan 01 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.346dd3af
+* Wed Jan 22 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- Compile for EPEL-10
+* Wed Jan 01 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.346dd3af
 - f50f2cbc61f0c7142d87c23229cf8da1ced79837 Update to latest SVN
 * Fri Sep 20 2024 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.346dd3af
 - Remove python2 default build with fedora 41
