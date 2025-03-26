@@ -54,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        17.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        18.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -86,6 +86,8 @@ Patch2:         %{name}-fix-tcl-manpage.patch
 Patch3:         %{name}-kernel-dont-ignore-errors.patch
 Patch4:         %{name}-kernel-fix-epel-build.patch
 Patch5:         %{name}-pkg-version.patch
+Patch6:         %{name}-fix-tcl-ibcmds.patch
+Patch7:         %{name}-fix-guile-gpib.patch
 
 Requires:       dkms-%{name}
 
@@ -281,6 +283,11 @@ HTML and PDF documentation for %{name}.
 %endif
 %{?el7:%patch 4 -p1}
 %patch 5 -p1
+
+%if 0%{?fedora} >= 41 
+%patch 6 -p1
+%patch 7 -p1
+%endif
 
 pushd %{name}-kernel
 sed -e 's/__VERSION_STRING/%{version}/g' %{SOURCE4} > dkms.conf
@@ -692,6 +699,10 @@ fi
 
 
 %changelog
+* Wed Mar 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- make fixes for Fedora 42
+- TCL 9 - deal with deprecations
+- guile - don't let warnings kill compile
 * Wed Jan 22 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - Compile for EPEL-10
 * Wed Jan 01 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> - git.346dd3af
