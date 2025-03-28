@@ -34,7 +34,7 @@ MESSAGE_ID=a50ec012c08b44d28a3bdcfe92951e1a
 MESSAGE=Preparing to configure $ID_GPIB_BOARD_TYPE adapater with serial number $serial_from_sysfs on /dev/gbib$ID_GPIB_MINOR
 end
 	echo "$MEASSAGE" | systemd-cat -p info
-        /usr/sbin/gpib_config \
+        gpib_config \
             --minor $ID_GPIB_MINOR \
             --board-type $ID_GPIB_BOARD_TYPE 
 #			--serial $serial_from_sysfs
