@@ -1,5 +1,5 @@
---- linux-gpib-git-f50f2cbc61f0c7142d87c23229cf8da1ced79837-orig/linux-gpib-user/lib/gpib_config/Makefile.am	2024-12-11 12:29:21.000000000 -0500
-+++ linux-gpib-git-f50f2cbc61f0c7142d87c23229cf8da1ced79837/linux-gpib-user/lib/gpib_config/Makefile.am	2025-03-29 10:54:18.412174019 -0400
+--- old/linux-gpib-user/lib/gpib_config/Makefile.am	2024-12-11 12:29:21.000000000 -0500
++++ new/linux-gpib-user/lib/gpib_config/Makefile.am	2025-03-29 10:54:18.412174019 -0400
 @@ -7,7 +7,7 @@
  #   the Free Software Foundation; either version 2 of the License, or
  #   (at your option) any later version.

@@ -88,7 +88,7 @@ Patch4:         %{name}-kernel-fix-epel-build.patch
 Patch5:         %{name}-pkg-version.patch
 Patch6:         %{name}-fix-tcl-ibcmds.patch
 Patch7:         %{name}-fix-guile-gpib.patch
-Patch8:         %{name}-gpib_config.patch
+Patch8:         %{name}-fix-gpib_config.patch
 
 Requires:       dkms-%{name}
 
