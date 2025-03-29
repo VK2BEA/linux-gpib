@@ -20,7 +20,7 @@
 %bcond_without tcl
 
 %global gitrev f50f2cbc61f0c7142d87c23229cf8da1ced79837
-%global gitdate 20250328
+%global gitdate 20250329
 
 %global _hardened_build 1
 
@@ -54,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        19.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        20.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -88,6 +88,7 @@ Patch4:         %{name}-kernel-fix-epel-build.patch
 Patch5:         %{name}-pkg-version.patch
 Patch6:         %{name}-fix-tcl-ibcmds.patch
 Patch7:         %{name}-fix-guile-gpib.patch
+Patch8:         %{name}-gpib_config.patch
 
 Requires:       dkms-%{name}
 
@@ -287,6 +288,9 @@ HTML and PDF documentation for %{name}.
 %if 0%{?fedora} >= 41 
 %patch 6 -p1
 %patch 7 -p1
+%endif
+%if 0%{?fedora} >= 42 
+%patch 8 -p1
 %endif
 
 pushd %{name}-kernel
@@ -699,6 +703,8 @@ fi
 
 
 %changelog
+* Sat Mar 29 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- Fedora 42 is deprecating /usr/sbin .. do put gpib_config in /usr/bin
 * Wed Mar 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - make fixes for Fedora 42
 - TCL 9 - deal with deprecations
