@@ -4,8 +4,7 @@ KERNEL=="gpib[0-9]*", TAG+="systemd"
 # Allow users to have access to /dev/gpib*
 ACTION!="remove", KERNEL=="gpib[0-9]*", TAG+="uaccess"
 
-SUBSYSTEM!="usb",           GOTO="gpib_adapter_end"
-ENV{DEVTYPE}!="usb_device", GOTO="gpib_adapter_end"
+SUBSYSTEM!="usb" || ENV{DEVTYPE}!="usb_device", GOTO="gpib_adapter_end"
 
 # Give systemd access to all supported adapters, including those without firmware
 # HP / Agilent / Keysight
@@ -21,8 +20,9 @@ ATTR{idVendor}=="0957", ATTR{idProduct}=="0107|0718",      ENV{ID_GPIB_ADAPTER}=
 ATTR{idVendor}=="3923", ATTR{idProduct}=="702a|709b|7618", ENV{ID_GPIB_ADAPTER}="1"
 
 # Set specific minor device numbers based on USB serial number
-# ENV{ID_GPIB_ADAPTER}=="1", ATTR{serial}=="MY49450720", ENV{ID_GPIB_MINOR}:="10"
-# ENV{ID_GPIB_ADAPTER}=="1", ATTR{serial}=="016AC4CD",   ENV{ID_GPIB_MINOR}:="11"
+ENV{ID_GPIB_ADAPTER}=="1", ATTR{serial}=="MY49450720", ENV{ID_GPIB_MINOR}:="10"
+ENV{ID_GPIB_ADAPTER}=="1", ATTR{serial}=="016AC4CD",   ENV{ID_GPIB_MINOR}:="11"
+ENV{ID_GPIB_ADAPTER}=="1", ATTR{serial}=="013876C6",   ENV{ID_GPIB_MINOR}:="12"
 
 # use systemd to run gpib_config
 ENV{ID_GPIB_ADAPTER}=="1", ENV{SYSTEMD_WANTS}="linux-gpib-config@.service"
