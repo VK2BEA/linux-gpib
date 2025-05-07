@@ -19,8 +19,8 @@
 %bcond_without python3
 %bcond_without tcl
 
-%global gitrev f50f2cbc61f0c7142d87c23229cf8da1ced79837
-%global gitdate 20250329
+%global gitrev dd8dc9055378c9fd6e034b4d7b0365edf1a9be14 
+%global gitdate 20250507
 
 %global _hardened_build 1
 
@@ -54,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        20.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        21.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -86,9 +86,7 @@ Patch2:         %{name}-fix-tcl-manpage.patch
 Patch3:         %{name}-kernel-dont-ignore-errors.patch
 Patch4:         %{name}-kernel-fix-epel-build.patch
 Patch5:         %{name}-pkg-version.patch
-Patch6:         %{name}-fix-tcl-ibcmds.patch
-Patch7:         %{name}-fix-guile-gpib.patch
-Patch8:         %{name}-fix-gpib_config.patch
+Patch6:         %{name}-fix-gpib_config.patch
 
 Requires:       dkms-%{name}
 
@@ -285,12 +283,8 @@ HTML and PDF documentation for %{name}.
 %{?el7:%patch 4 -p1}
 %patch 5 -p1
 
-%if 0%{?fedora} >= 41 
-%patch 6 -p1
-%patch 7 -p1
-%endif
 %if 0%{?fedora} >= 42 
-%patch 8 -p1
+%patch 6 -p1
 %endif
 
 pushd %{name}-kernel
@@ -436,6 +430,9 @@ popd # %%{name}-user
 # remove libtool stuff
 find %{buildroot} -name '*.la' -delete
 
+# remove .gitignore
+find %{buildroot} -name '.gitignore' -delete
+
 # ... and automake caches `make dist` didn't get rid of
 find %{buildroot} -name '.cache.mk' -delete
 
@@ -529,7 +526,7 @@ fi
 dkms add -m %{name} -v %{version}-%{release} -q --rpm_safe_upgrade || :
 # Rebuild and make available for the currently running kernel
 dkms build -m %{name} -v %{version}-%{release} -q || :
-dkms install -m %{name} -v %{version}-%{release} -q --force || :
+dkms install -m %{name} -v %{version}-%{release} --force -q || :
 
 %{?ldconfig}
 udevadm control --reload > /dev/null 2>&1 || :
@@ -607,6 +604,7 @@ fi
 
 %{_includedir}/gpib/gpib_user.h
 %{_includedir}/gpib/ib.h
+%{_includedir}/gpib/gpib.h
 %{_includedir}/gpib/gpib_version.h
 %{_libdir}/pkgconfig/libgpib.pc
 %{_libdir}/libgpib.so
@@ -703,6 +701,8 @@ fi
 
 
 %changelog
+* Wed May 07 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- dd8dc9055378c9fd6e034b4d7b0365edf1a9be14 Update to latest git
 * Sat Mar 29 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - Fedora 42 is deprecating /usr/sbin .. do put gpib_config in /usr/bin
 * Wed Mar 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
