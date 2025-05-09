@@ -61,6 +61,3 @@ BUILT_MODULE_NAME[12]="fmh_gpib"
 BUILT_MODULE_LOCATION[12]="drivers/gpib/fmh_gpib/"
 DEST_MODULE_LOCATION[12]="/extra"
 
-BUILT_MODULE_NAME[12]="gpib_bitbang"
-BUILT_MODULE_LOCATION[12]="drivers/gpib/gpio/"
-DEST_MODULE_LOCATION[12]="/extra"

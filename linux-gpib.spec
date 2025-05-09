@@ -19,8 +19,8 @@
 %bcond_without python3
 %bcond_without tcl
 
-%global gitrev dd8dc9055378c9fd6e034b4d7b0365edf1a9be14 
-%global gitdate 20250507
+%global gitrev b0997a153593ed6aeb0d48167648ee87ef919e32
+%global gitdate 20250509
 
 %global _hardened_build 1
 
@@ -54,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        21.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        22.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -701,8 +701,8 @@ fi
 
 
 %changelog
-* Wed May 07 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
-- dd8dc9055378c9fd6e034b4d7b0365edf1a9be14 Update to latest git
+* Fri May 09 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- b0997a153593ed6aeb0d48167648ee87ef919e32 Update to latest git
 * Sat Mar 29 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - Fedora 42 is deprecating /usr/sbin .. do put gpib_config in /usr/bin
 * Wed Mar 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
