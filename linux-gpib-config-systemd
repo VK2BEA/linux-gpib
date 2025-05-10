@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 
 # This script configures the Linux-GPIB driver for Agilent 82357A/B and National
 # Instruments GPIB-USB adapters. It is intended to be called from a systemd unit
@@ -31,13 +31,13 @@ case $1 in
 
         /usr/bin/logger --journald <<end
 MESSAGE_ID=a50ec012c08b44d28a3bdcfe92951e1a
-MESSAGE=Preparing to configure $ID_GPIB_BOARD_TYPE adapater with serial number $serial_from_sysfs on /dev/gbib$ID_GPIB_MINOR
+MESSAGE=Preparing to configure $ID_GPIB_BOARD_TYPE adapater with serial number $serial_from_sysfs on /dev/gpib$ID_GPIB_MINOR ($DEVPATH) 
 end
 	echo "$MEASSAGE" | systemd-cat -p info
         gpib_config \
             --minor $ID_GPIB_MINOR \
-            --board-type $ID_GPIB_BOARD_TYPE 
-#			--serial $serial_from_sysfs
+            --board-type $ID_GPIB_BOARD_TYPE -sysfs-device-path $DEVPATH
+#           --serial $serial_from_sysfs
         ;;
     *)
         usage

@@ -24,7 +24,7 @@ ATTR{idVendor}=="3923", ATTR{idProduct}=="702a|709b|7618", ENV{ID_GPIB_ADAPTER}=
 ATTR{idVendor}=="0403", ATTR{idProduct}=="6001", ENV{ID_GPIB_ADAPTER}="1"
 
 # use systemd to run gpib_config
-ENV{ID_GPIB_ADAPTER}=="1", ENV{SYSTEMD_WANTS}="linux-gpib-config@.service"
+ACTION=="add|change", ENV{ID_GPIB_ADAPTER}=="1", ENV{SYSTEMD_WANTS}="linux-gpib-config@.service"
 
 LABEL="gpib_adapter_end"
 
