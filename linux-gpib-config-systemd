@@ -28,15 +28,19 @@ case $1 in
         # rules from udevadm, See:
         # https://superuser.com/questions/924683/passing-udev-environment-variables-to-systemd-service-execution
         eval $(udevadm info --query=env --export $1)
+	# We have the USB device but we need the USB inteface
+	SYSFSDEVICEPATH="${DEVPATH}/$(basename ${DEVPATH}):1.0"
+
 
         /usr/bin/logger --journald <<end
 MESSAGE_ID=a50ec012c08b44d28a3bdcfe92951e1a
-MESSAGE=Preparing to configure $ID_GPIB_BOARD_TYPE adapater with serial number $serial_from_sysfs on /dev/gpib$ID_GPIB_MINOR ($DEVPATH) 
+MESSAGE=gpib_configure ${ID_GPIB_BOARD_TYPE}, S/N:  $serial_from_sysfs on /dev/gpib$ID_GPIB_MINOR, sysfs: ${SYSFSDEVICEPATH} 
 end
 	echo "$MEASSAGE" | systemd-cat -p info
         gpib_config \
-            --minor $ID_GPIB_MINOR \
-            --board-type $ID_GPIB_BOARD_TYPE -sysfs-device-path $DEVPATH
+            --minor ${ID_GPIB_MINOR} \
+            --board-type ${ID_GPIB_BOARD_TYPE} \
+	    --sysfs-device-path ${SYSFSDEVICEPATH}
 #           --serial $serial_from_sysfs
         ;;
     *)
