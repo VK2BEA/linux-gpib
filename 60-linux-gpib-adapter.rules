@@ -38,7 +38,7 @@ LABEL="exit"
 #    # This sets the minor device numbers prior to
 #    # /usr/lib/udev/rules.d/60-linux-gpib-adapter.conf
 #    # which triggers systemd programs (gpib_config) to configure the devices
-#    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", GOTO="execute"
+#    SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", GOTO="execute"
 #    GOTO="end"
 #
 #    LABEL="execute"
@@ -51,5 +51,5 @@ LABEL="exit"
 #      # it is also possible to match on the particular USB port (rather than device S/N)
 #      # e.g. use DEVPATH="/devices/pci0000:00/0000:00:14.0/usb1/1-4/1-4:1.0" rather than ATTRS{serial}=="016AC4CD"
 #
-#    LABEL="END"
+#    LABEL="end"
 

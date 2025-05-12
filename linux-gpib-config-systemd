@@ -29,16 +29,20 @@ case $1 in
         # https://superuser.com/questions/924683/passing-udev-environment-variables-to-systemd-service-execution
         eval $(udevadm info --query=env --export $1)
 
+        if [[ "${ID_GPIB_MINOR}" == "" ]]; then
+          ID_GPIB_MINOR=0
+        fi
+        ARGS="--minor ${ID_GPIB_MINOR} \
+              --board-type ${ID_GPIB_BOARD_TYPE} \
+              --sysfs-device-path ${DEVPATH}"
+        NOTICE="gpib_configure ${ID_GPIB_BOARD_TYPE}, S/N:  $serial_from_sysfs on /dev/gpib$ID_GPIB_MINOR, sysfs: ${DEVPATH}  ${DEVTYPE}"
+
         /usr/bin/logger --journald <<end
 MESSAGE_ID=a50ec012c08b44d28a3bdcfe92951e1a
-MESSAGE=gpib_configure ${ID_GPIB_BOARD_TYPE}, S/N:  $serial_from_sysfs on /dev/gpib$ID_GPIB_MINOR, sysfs: ${DEVPATH}  ${DEVTYPE}
+MESSAGE=${NOTICE}
 end
-	echo "$MEASSAGE" | systemd-cat -p info
-        gpib_config \
-            --minor ${ID_GPIB_MINOR} \
-            --board-type ${ID_GPIB_BOARD_TYPE} \
-	    --sysfs-device-path ${DEVPATH}
-#           --serial $serial_from_sysfs
+        echo "${MEASSAGE}" | systemd-cat -p info
+        gpib_config ${ARGS}
         ;;
     *)
         usage
