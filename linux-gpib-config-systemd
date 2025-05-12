@@ -21,26 +21,23 @@ case $1 in
         # mangle, but it will be the same as the serial number in struct
         # usb_device, which the --serial parameter of gpib_config matches
         # against.
-        serial_from_sysfs=$(cat $1/serial)
+        serial_from_sysfs=$(cat $1/../serial)
 
         # Since we can only realistically pass one argument into the systemd
         # unit file, we can get the environment variables defined in the udev
         # rules from udevadm, See:
         # https://superuser.com/questions/924683/passing-udev-environment-variables-to-systemd-service-execution
         eval $(udevadm info --query=env --export $1)
-	# We have the USB device but we need the USB inteface
-	SYSFSDEVICEPATH="${DEVPATH}/$(basename ${DEVPATH}):1.0"
-
 
         /usr/bin/logger --journald <<end
 MESSAGE_ID=a50ec012c08b44d28a3bdcfe92951e1a
-MESSAGE=gpib_configure ${ID_GPIB_BOARD_TYPE}, S/N:  $serial_from_sysfs on /dev/gpib$ID_GPIB_MINOR, sysfs: ${SYSFSDEVICEPATH} 
+MESSAGE=gpib_configure ${ID_GPIB_BOARD_TYPE}, S/N:  $serial_from_sysfs on /dev/gpib$ID_GPIB_MINOR, sysfs: ${DEVPATH}  ${DEVTYPE}
 end
 	echo "$MEASSAGE" | systemd-cat -p info
         gpib_config \
             --minor ${ID_GPIB_MINOR} \
             --board-type ${ID_GPIB_BOARD_TYPE} \
-	    --sysfs-device-path ${SYSFSDEVICEPATH}
+	    --sysfs-device-path ${DEVPATH}
 #           --serial $serial_from_sysfs
         ;;
     *)
