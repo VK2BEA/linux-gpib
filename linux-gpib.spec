@@ -54,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        24.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        25.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -701,6 +701,8 @@ fi
 
 
 %changelog
+* Tue May 13 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- Updated udev rules
 * Fri May 09 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - b0997a153593ed6aeb0d48167648ee87ef919e32 Update to latest git
 * Sat Mar 29 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
