@@ -4,31 +4,28 @@ KERNEL=="gpib[0-9]*", TAG+="systemd"
 # Allow users to have access to /dev/gpib*
 ACTION!="remove", KERNEL=="gpib[0-9]*", TAG+="uaccess"
 
-SUBSYSTEM!="usb",  GOTO="exit"
-  # Give systemd access to all supported adapters, including those without firmware
-  # HP / Agilent / Keysight
-  ENV{PRODUCT}=="957/107/*|957/718/*", ENV{ID_GPIB_ADAPTER}="1", TAG+="systemd"
-  # National Instruments
-  ENV{PRODUCT}=="3923/702[ab]/*|3923/713b/*|3923/709b/*|3923/7618/*|3923/725[cd]/*", ENV{ID_GPIB_ADAPTER}="1", TAG+="systemd"
-  # Laboritory of Photovoltaics and Optoelectronics (LPVO) 
-  ENV{PRODUCT}=="403/6001", ENV{ID_GPIB_ADAPTER}="1", TAG+="systemd"
-
-  # Determine the correct --board-type option
-  DRIVER=="agilent_82357a", ATTRS{serial}=="*", ENV{GPIB_CONFIG_OPTIONS}+="--board-type agilent_82357a", ENV{SERIAL}="$attr{serial}"
-  DRIVER=="ni_usb_gpib",    ATTRS{serial}=="*", ENV{GPIB_CONFIG_OPTIONS}+="--board-type ni_usb_b", ENV{SERIAL}="$attr{serial}"
-  DRIVER=="lpvo_usb_gpib",  ATTRS{serial}=="*", ENV{GPIB_CONFIG_OPTIONS}+="--board-type lpvo_usb_gpib", ENV{SERIAL}="$attr{serial}"
-
+SUBSYSTEM!="usb",     GOTO="exit"
 
   # Agilent/Keysight 82357A/B with firmware loaded
   # The idProduct changes after the firmware is loaded by a udev rule from 61-linux-gpib-firmware.rules
-  #     in the linux-gpib-firmware package. 0007 to 0107 (82357A) and 0518 to 0718 (82357B)
+  #     in the linux-gpib-firmware package. 
+  #     In Keysight devices, 0007 changes to 0107 (82357A) and 0518 to 0718 (82357B).
+  #     In NI devices, the idProduct is 702b before the firmware is loaded.
+  
+  # Determine the correct --board-type option and give systemd access
+  # HP / Agilent / Keysight (PID 0518 is before firmware loaded)
+  DRIVER=="agilent_82357a", ATTRS{idProduct}!="0518", ATTRS{serial}!="", ENV{SERIAL}="$attr{serial}", ENV{GPIB_CONFIG_OPTIONS}+="--board-type agilent_82357a", TAG+="systemd", ENV{CONFIG_GPIB}="Y"
+  # National Instrument (PID 702b is before firmware loaded)
+  DRIVER=="ni_usb_gpib",    ATTRS{idProduct}!="702b", ATTRS{serial}!="", ENV{SERIAL}="$attr{serial}", ENV{GPIB_CONFIG_OPTIONS}+="--board-type ni_usb_b",       TAG+="systemd", ENV{CONFIG_GPIB}="Y"
+  # Laboritory of Photovoltaics and Optoelectronics (LPVO) 
+  DRIVER=="lpvo_usb_gpib",  ATTRS{serial}!="", ENV{SERIAL}="$attr{serial}", ENV{GPIB_CONFIG_OPTIONS}+="--board-type lpvo_usb_gpib",  TAG+="systemd", ENV{CONFIG_GPIB}="Y"
 
   # use systemd to run gpib_config if it is an appropriate adapter
   # The instance name (inserted between @ and .) will be the escaped sysfs device path 
   # (also DEVPATH with the /sys prefix: /sys/devices/pci0000:00/0000:00:14.0/usb1/1-4)
   # e.g.: linux-gpib-config@sys-devices-pci0000:00-0000:00:14.0-usb1-1\x2d4.service
   # The systemd unit file can use the %I variable to pass the sysfs path to a script
-  ACTION=="add|change", ENV{DEVTYPE}=="usb_interface", ENV{ID_GPIB_ADAPTER}=="1", ENV{SYSTEMD_WANTS}="linux-gpib-config@.service"
+  ACTION!="add|change", ENV{DEVTYPE}=="usb_interface", ENV{CONFIG_GPIB}=="Y", ENV{SYSTEMD_WANTS}="linux-gpib-config@.service"
  
 LABEL="exit"
 
