@@ -13,13 +13,14 @@ SUBSYSTEM!="usb",  GOTO="exit"
   #                 Keithley: 713b before the firmware is loaded (KUSB-488B)
 
   # Give systemd access to all supported adapters, including those without firmware
-  # HP / Agilent / Keysight
+  # VID 0957 - HP / Agilent / Keysight (82357A (0107), 82357b (0718))
   ENV{PRODUCT}=="957/107/*|957/718/*", ENV{GPIB_CONFIG}="Y", TAG+="systemd"
   DRIVER=="agilent_82357a", ENV{GPIB_CONFIG_OPTIONS}+="--board-type agilent_82357a"
-  # National Instruments
-  ENV{PRODUCT}=="3923/702a/*|3923/709b/*|3923/7618/*|3923/725[cd]/*", ENV{GPIB_CONFIG}="Y", TAG+="systemd"
+  # VID 3923 - National Instruments (GPIB-USB-B (702a), GPIB-USB-HS (709b), GPIB-USB-HS+ (7618), 
+  #          Keithley KUSB-488 (713b), Keithley KUSB-488A (725c), Measurement Computing USB-488 (725d))
+  ENV{PRODUCT}=="3923/702a/*|3923/709b/*|3923/7618/*|3923/713b/*|3923/725[cd]/*", ENV{GPIB_CONFIG}="Y", TAG+="systemd"
   DRIVER=="ni_usb_gpib", ENV{GPIB_CONFIG_OPTIONS}+="--board-type ni_usb_b"
-  # Laboritory of Photovoltaics and Optoelectronics (LPVO) 
+  # VID 0403 - Laboritory of Photovoltaics and Optoelectronics (LPVO (6001)) (actually FTDI)
   ENV{PRODUCT}=="403/6001", ENV{GPIB_CONFIG}="Y", TAG+="systemd"
   DRIVER=="lpvo_usb_gpib", ENV{GPIB_CONFIG_OPTIONS}+="--board-type lpvo_usb_gpib"
 
