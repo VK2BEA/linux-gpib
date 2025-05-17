@@ -19,8 +19,8 @@
 %bcond_without python3
 %bcond_without tcl
 
-%global gitrev b0997a153593ed6aeb0d48167648ee87ef919e32
-%global gitdate 20250509
+%global gitrev 83b95b7de3553bf4944e5b043290cd66feffc562
+%global gitdate 20250517
 
 %global _hardened_build 1
 
@@ -54,7 +54,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        25.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        26.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -82,11 +82,12 @@ Source5:        %{name}-config-systemd
 Patch0:         %{name}-nodevnodes.patch
 # We package our own udev rules and firmware loader
 Patch1:         %{name}-remove-usb-autotools.patch
+# Some problems with the TCL man page
 Patch2:         %{name}-fix-tcl-manpage.patch
-Patch3:         %{name}-kernel-dont-ignore-errors.patch
-Patch4:         %{name}-kernel-fix-epel-build.patch
-Patch5:         %{name}-pkg-version.patch
-Patch6:         %{name}-fix-gpib_config.patch
+# Use /usr/bin rather than /usr/sbin for gpib_config (prctice since Fedora 42)
+Patch3:         %{name}-fix-gpib_config.patch
+# Use .so versioning 4.0.4 rather than 4:0:4
+Patch4:         %{name}-pkg-version.patch
 
 Requires:       dkms-%{name}
 
@@ -277,15 +278,10 @@ HTML and PDF documentation for %{name}.
 %patch 0 -p1
 %patch 1 -p1
 %patch 2 -p1
-%if 0
-%{patch 3 -p1}
-%endif
-%{?el7:%patch 4 -p1}
-%patch 5 -p1
-
 %if 0%{?fedora} >= 42 
-%patch 6 -p1
+%patch 3 -p1
 %endif
+%patch 4 -p1
 
 pushd %{name}-kernel
 sed -e 's/__VERSION_STRING/%{version}/g' %{SOURCE4} > dkms.conf
@@ -701,6 +697,10 @@ fi
 
 
 %changelog
+* Sat May 17 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- 83b95b7de3553bf4944e5b043290cd66feffc562 git update
+* Fri May 16 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- 933d42fa8e4a8f0e1ee6c44b2fc44469d31baf16 Update to latest git
 * Tue May 13 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - Updated udev rules
 * Fri May 09 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
