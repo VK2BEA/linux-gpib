@@ -19,8 +19,9 @@
 %bcond_without python3
 %bcond_without tcl
 
-%global gitrev 83b95b7de3553bf4944e5b043290cd66feffc562
-%global gitdate 20250517
+# https://sourceforge.net/p/linux-gpib/git/ci/44e3d07dfc6836929d81e808a269e3143054b233/tree/
+%global gitrev 44e3d07dfc6836929d81e808a269e3143054b233
+%global gitdate 20250521
 
 %global _hardened_build 1
 
@@ -33,16 +34,6 @@
 
 %{?with_perl:%global perlname LinuxGpib}
 
-#%%if %%{with php}
-    ## from: https://docs.fedoraproject.org/en-US/packaging-guidelines/PHP/
-    #%%global php_apiver \
-        #%%((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
-    #%%global php_extdir \
-        #%%(php-config --extension-dir 2>/dev/null || echo "undefined")
-    #%%global php_version \
-        #%%(php-config --version 2>/dev/null || echo 0)
-#%%endif
-
 %if %{with tcl}
     # this is hacky, since the copr buildroot doesn't currently provide tclsh
     # adapted from <https://src.fedoraproject.org/rpms/tcl-togl/blob/master/f/tcl-togl.spec> 
@@ -54,7 +45,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        26.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        28.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -63,12 +54,8 @@ URL:            http://linux-gpib.sourceforge.net/
 # The source for this package was pulled from upstream's vcs. Use the
 # below commands to generate the zip or use the SourceForge website.
 # We use zip instead of tar.gz since that is what is on SourceForge
-#  $ svn export -r <svnrev> https://svn.code.sf.net/p/linux-gpib/code/trunk linux-gpib-code-<svnrev>-trunk
-#  $ zip -r linux-gpib-code-<svnrev>-trunk.zip linux-gpib-code-<svnrev>-trunk
-# as of Jun 6th 2024, use git
-# git clone https://git.code.sf.net/p/linux-gpib/git linux-gpib-git
-# git reset --hard 4c5ef2e6
-# zip -r linux-gpib-git-4c5ef2e6.zip linux-gpib-git
+#  $ wget https://sourceforge.net/code-snapshots/git/l/li/linux-gpib/git.git/linux-gpib-git-44e3d07dfc6836929d81e808a269e3143054b233.zip
+#  $ git clone https://git.code.sf.net/p/linux-gpib/git linux-gpib-git
 
 Source0:        %{name}-git-%{gitrev}.zip
 
@@ -82,12 +69,8 @@ Source5:        %{name}-config-systemd
 Patch0:         %{name}-nodevnodes.patch
 # We package our own udev rules and firmware loader
 Patch1:         %{name}-remove-usb-autotools.patch
-# Some problems with the TCL man page
-Patch2:         %{name}-fix-tcl-manpage.patch
 # Use /usr/bin rather than /usr/sbin for gpib_config (prctice since Fedora 42)
-Patch3:         %{name}-fix-gpib_config.patch
-# Use .so versioning 4.0.4 rather than 4:0:4
-Patch4:         %{name}-pkg-version.patch
+Patch2:         %{name}-fix-gpib_config.patch
 
 Requires:       dkms-%{name}
 
@@ -277,11 +260,9 @@ HTML and PDF documentation for %{name}.
 
 %patch 0 -p1
 %patch 1 -p1
-%patch 2 -p1
 %if 0%{?fedora} >= 42 
-%patch 3 -p1
+%patch 2 -p1
 %endif
-%patch 4 -p1
 
 pushd %{name}-kernel
 sed -e 's/__VERSION_STRING/%{version}/g' %{SOURCE4} > dkms.conf
@@ -697,6 +678,8 @@ fi
 
 
 %changelog
+* Wed May 21 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- 44e3d07dfc6836929d81e808a269e3143054b233 Update to latest git
 * Sat May 17 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - 83b95b7de3553bf4944e5b043290cd66feffc562 git update
 * Fri May 16 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
