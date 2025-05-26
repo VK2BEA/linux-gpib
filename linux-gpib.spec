@@ -1,6 +1,9 @@
+# Conditional build with a command line option - (the default condition is the opposite)
 %if 0%{?rhel} >= 8
+# Create an option to build with guile for RHEL (`--with guile`), thus default building without it.
 %bcond_with guile
 %else
+# For others (e.g. Fedora), create an option to build without guile (`--without guile`), thus default building with it.
 %bcond_without guile
 %endif
 %bcond_without docs
@@ -14,8 +17,8 @@
 %bcond_without python3
 %bcond_without tcl
 
-# https://sourceforge.net/p/linux-gpib/git/ci/44e3d07dfc6836929d81e808a269e3143054b233/tree/
-%global gitrev cf098edaf2d7a63b8ac8fb3e350e6d633f7f4cb4
+# https://sourceforge.net/p/linux-gpib/git/ci/4c820721bd53f11d509eee6724fb5df33b3614aa/tree/
+%global gitrev 4c820721bd53f11d509eee6724fb5df33b3614aa
 %global gitdate 20250526
 
 %global _hardened_build 1
@@ -269,12 +272,14 @@ touch ChangeLog
 autoreconf -vif
 
 # we make the docs, and the Perl and Python bindings in the spec, 
-# not the library's Makefile
+# not the library's Makefile (see the docs section below)
 %configure \
     %{!?with_guile:--disable-guile18-binding} \
     %{!?with_php:--disable-php-binding} \
     %{!?with_tcl:--disable-tcl-binding} \
     --disable-documentation \
+    --disable-html-docs \
+    --disable-manpages \
     --disable-python-binding \
     --disable-perl-binding \
     --disable-static \
@@ -343,7 +348,7 @@ popd # language
 
 pushd doc
 echo '<phrase xmlns="http://docbook.org/ns/docbook" version="5.0">%{version}</phrase>' > %{name}-version.xml
-echo %{version} > GPIB_version.txt;
+echo %{version} > gpib_version.txt;
 osx -x no-expand-internal -x no-internal-decl -x preserve-case %{name}.sgml > %{name}.xml
      xsltproc --param man.authors.section.enabled 0 \
               --param man.output.in.separate.dir 1 \
@@ -668,7 +673,7 @@ fi
 
 %changelog
 * Mon May 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
-- cf098edaf2d7a63b8ac8fb3e350e6d633f7f4cb4 Update documentation
+- 4c820721bd53f11d509eee6724fb5df33b3614aa Update documentation
 * Wed May 21 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - 44e3d07dfc6836929d81e808a269e3143054b233 Update to latest git
 * Sat May 17 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
