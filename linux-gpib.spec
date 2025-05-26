@@ -1,16 +1,11 @@
 %if 0%{?rhel} >= 8
-%bcond_with docs
 %bcond_with guile
 %else
-%bcond_without docs
 %bcond_without guile
 %endif
+%bcond_without docs
 %bcond_without perl
-%if 0%{?rhel}
-%bcond_with php
-%else
 %bcond_without php
-%endif
 %if 0%{?fedora} >= 41 || 0%{?rhel} >= 10
 %bcond_with python2
 %else
@@ -20,8 +15,8 @@
 %bcond_without tcl
 
 # https://sourceforge.net/p/linux-gpib/git/ci/44e3d07dfc6836929d81e808a269e3143054b233/tree/
-%global gitrev 44e3d07dfc6836929d81e808a269e3143054b233
-%global gitdate 20250521
+%global gitrev cf098edaf2d7a63b8ac8fb3e350e6d633f7f4cb4
+%global gitdate 20250526
 
 %global _hardened_build 1
 
@@ -45,7 +40,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        28.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        29.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -58,12 +53,10 @@ URL:            http://linux-gpib.sourceforge.net/
 #  $ git clone https://git.code.sf.net/p/linux-gpib/git linux-gpib-git
 
 Source0:        %{name}-git-%{gitrev}.zip
-
-Source1:        %{name}-docs.xml
-Source2:        60-%{name}-adapter.rules
-Source3:        %{name}-config@.service.in
-Source4:        dkms-%{name}.conf.in
-Source5:        %{name}-config-systemd
+Source1:        60-%{name}-adapter.rules
+Source2:        %{name}-config@.service.in
+Source3:        dkms-%{name}.conf.in
+Source4:        %{name}-config-systemd
 
 # We don't need to mknod since we can let the driver and systemd take care of it
 Patch0:         %{name}-nodevnodes.patch
@@ -90,11 +83,14 @@ BuildRequires:  bison
 BuildRequires:  libxslt
 BuildRequires:  python3-setuptools
 BuildRequires:  perl
-%if 0%{?el8}
-BuildRequires:  docbook-style-xsl
-%else
 BuildRequires:  docbook5-style-xsl
-%endif
+BuildRequires:  dblatex
+BuildRequires:  opensp
+BuildRequires:  texlive-jadetex
+BuildRequires:  texlive-dvips
+BuildRequires:  texlive-metafont
+BuildRequires:  texlive-wasy
+BuildRequires:  docbook5-schemas
 
 %{?systemd_requires}
 BuildRequires:  systemd
@@ -248,7 +244,6 @@ Summary:        Documentation for %{name} library
 
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
-BuildRequires:  dblatex
 
 %description doc
 HTML and PDF documentation for %{name}.
@@ -265,7 +260,7 @@ HTML and PDF documentation for %{name}.
 %endif
 
 pushd %{name}-kernel
-sed -e 's/__VERSION_STRING/%{version}/g' %{SOURCE4} > dkms.conf
+sed -e 's/__VERSION_STRING/%{version}/g' %{SOURCE3} > dkms.conf
 popd
 
 %build
@@ -348,59 +343,52 @@ popd # language
 
 pushd doc
 echo '<phrase xmlns="http://docbook.org/ns/docbook" version="5.0">%{version}</phrase>' > %{name}-version.xml
-cp -fp %{SOURCE1} %{name}.xml
-
-xsltproc --param man.authors.section.enabled 0 \
-         --param man.output.in.separate.dir 1 \
-         --xinclude \
-%if 0%{?el8}
-         %{_datadir}/sgml/docbook/xsl-stylesheets/manpages/docbook.xsl \
-%else
-         %{_datadir}/sgml/docbook/xsl-ns-stylesheets/manpages/docbook.xsl \
-%endif 
-         %{name}.xml
-
+echo %{version} > GPIB_version.txt;
+osx -x no-expand-internal -x no-internal-decl -x preserve-case %{name}.sgml > %{name}.xml
+     xsltproc --param man.authors.section.enabled 0 \
+              --param man.output.in.separate.dir 1 \
+              %{_datadir}/sgml/docbook/xsl-ns-stylesheets/manpages/docbook.xsl \
+              %{name}.xml
 for mandir in man1 man3 man5 man8 ; do
     install -p -m 0644 man/$mandir/* %{buildroot}%{_mandir}/$mandir
 done
 
 %if %{with docs}
-    dblatex %{name}.xml -P table.in.float=none -o %{name}.pdf
-    install -p -m 0644 %{name}.pdf %{buildroot}%{_docdir}/%{name}
-
-    install -p -m 0644 %{name}.xml %{buildroot}%{_docdir}/%{name}
-    install -p -m 0644 %{name}-version.xml %{buildroot}%{_docdir}/%{name}
-    install -p -m 0644 obsolete-linux-gpib.txt %{buildroot}%{_docdir}/%{name}
-
-    xsltproc --param generate.revhistory.link 1 \
+    dblatex %{name}.sgml -F sgml -P table.in.float=none -o %{name}.pdf
+        xsltproc --param generate.revhistory.link 1 \
              --param generate.section.toc.level 2 \
              --param make.clean.html 1 \
              --param table.borders.with.css 1 \
              --param use.id.as.filename 1 \
-             --stringparam base.dir "html" \
+             --stringparam base.dir "doc_html" \
              --stringparam chunker.output.omit-xml-declaration "yes" \
              --stringparam html.ext ".html" \
              --xinclude \
              %{_datadir}/sgml/docbook/xsl-ns-stylesheets/xhtml5/chunk.xsl \
              %{name}.xml
-    
+    install -p -m 0644 %{name}.pdf %{buildroot}%{_docdir}/%{name}
+
+    install -p -m 0644 %{name}-version.xml %{buildroot}%{_docdir}/%{name}
+    install -p -m 0644 %{name}.xml %{buildroot}%{_docdir}/%{name}
+    install -p -m 0644 obsolete-linux-gpib.txt %{buildroot}%{_docdir}/%{name}
+
     install -d %{buildroot}%{_docdir}/%{name}/html
-    install -p -m 0644 html/* %{buildroot}%{_docdir}/%{name}/html
+    install -p -m 0644 doc_html/* %{buildroot}%{_docdir}/%{name}/html
 %endif
 popd # doc
 
 # udev rules
 install -d %{buildroot}%{_udevrulesdir}
-install -p -m 0644 %{SOURCE2} %{buildroot}%{_udevrulesdir}
+install -p -m 0644 %{SOURCE1} %{buildroot}%{_udevrulesdir}
 
 # systemd config unit
 install -d %{buildroot}%{_unitdir}
-sed -e 's|@libexecdir@|%{_libexecdir}|g' %{SOURCE3} > %{name}-config@.service
+sed -e 's|@libexecdir@|%{_libexecdir}|g' %{SOURCE2} > %{name}-config@.service
 install -p -m 0644 %{name}-config@.service %{buildroot}%{_unitdir}
 
 # systemd config script
 install -d %{buildroot}%{_libexecdir}
-install -p -m 0755 %{SOURCE5} %{buildroot}%{_libexecdir}
+install -p -m 0755 %{SOURCE4} %{buildroot}%{_libexecdir}
 popd # %%{name}-user
 
 # Cleanup
@@ -551,6 +539,7 @@ fi
 %attr(755,root,root) %{_libexecdir}/linux-gpib-config-systemd
 
 %{_mandir}/man1/*
+%{_mandir}/man3/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 
@@ -678,6 +667,8 @@ fi
 
 
 %changelog
+* Mon May 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- cf098edaf2d7a63b8ac8fb3e350e6d633f7f4cb4 Update documentation
 * Wed May 21 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - 44e3d07dfc6836929d81e808a269e3143054b233 Update to latest git
 * Sat May 17 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
