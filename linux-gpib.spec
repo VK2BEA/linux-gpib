@@ -65,8 +65,6 @@ Source4:        %{name}-config-systemd
 Patch0:         %{name}-nodevnodes.patch
 # We package our own udev rules and firmware loader
 Patch1:         %{name}-remove-usb-autotools.patch
-# Use /usr/bin rather than /usr/sbin for gpib_config (prctice since Fedora 42)
-Patch2:         %{name}-fix-gpib_config.patch
 
 Requires:       dkms-%{name}
 
@@ -258,9 +256,6 @@ HTML and PDF documentation for %{name}.
 
 %patch 0 -p1
 %patch 1 -p1
-%if 0%{?fedora} >= 42 
-%patch 2 -p1
-%endif
 
 pushd %{name}-kernel
 sed -e 's/__VERSION_STRING/%{version}/g' %{SOURCE3} > dkms.conf
@@ -283,7 +278,7 @@ autoreconf -vif
     --disable-python-binding \
     --disable-perl-binding \
     --disable-static \
-    YACC=bison 
+    --sbindir=%{_sbindir} YACC=bison 
 
 %make_build
 

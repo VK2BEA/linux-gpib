@@ -1,6 +1,6 @@
 --- old/linux-gpib-user/configure.ac	2022-06-06 16:20:34.432280304 -0400
 +++ new/linux-gpib-user/configure.ac	2022-06-06 16:28:56.968945905 -0400
-@@ -205,10 +205,6 @@
+@@ -232,10 +232,6 @@
  	language/php/TESTS/Makefile \
  	language/python/Makefile \
  	language/tcl/Makefile \
