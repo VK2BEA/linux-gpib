@@ -18,8 +18,8 @@
 %bcond_without tcl
 
 # https://sourceforge.net/p/linux-gpib/git/ci/4c820721bd53f11d509eee6724fb5df33b3614aa/tree/
-%global gitrev 4c820721bd53f11d509eee6724fb5df33b3614aa
-%global gitdate 20250526
+%global gitrev 55e1b4020509a891b90502828247c93da87de40d
+%global gitdate 20251008
 
 %global _hardened_build 1
 
@@ -43,7 +43,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        29.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        32.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -66,6 +66,8 @@ Patch0:         %{name}-nodevnodes.patch
 # We package our own udev rules and firmware loader
 Patch1:         %{name}-remove-usb-autotools.patch
 
+# The GPIB driver is scheduled to be in the mainline in 6.18
+#   prior to this version the dkms kernel module is required
 Requires:       dkms-%{name}
 
 Requires(post):   /sbin/ldconfig
@@ -83,6 +85,10 @@ BuildRequires:  bison
 
 BuildRequires:  libxslt
 BuildRequires:  python3-setuptools
+%if 0%{?fedora} >= 42 
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  python3-pip
+%endif
 BuildRequires:  perl
 BuildRequires:  docbook5-style-xsl
 BuildRequires:  dblatex
@@ -293,8 +299,12 @@ pushd language
 %endif
 
 pushd python
+%if 0%{?fedora} >= 42
+%{?with_python3:%pyproject_wheel}
+%else
 %{?with_python2:%py2_build}
 %{?with_python3:%py3_build}
+%endif
 popd
 popd # language
 popd # %%{name}-user
@@ -329,8 +339,12 @@ pushd perl
 popd
 
 pushd python
+%if 0%{?fedora} >= 42
+%{?with_python3:%pyproject_install}
+%else
 %{?with_python2:%py2_install}
 %{?with_python3:%py3_install}
+%endif
 popd
 
 pushd tcl
@@ -667,8 +681,12 @@ fi
 
 
 %changelog
-* Mon May 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
-- 4c820721bd53f11d509eee6724fb5df33b3614aa Update documentation
+* Wed Oct 08 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- 55e1b4020509a891b90502828247c93da87de40d Update tolatest git
+* Tue Aug 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- b8da53bfdf1ee005b0db70618506f799a439bef2 Update to latest git
+* Tue Aug 05 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
+- 0fc6e300481c1f7ef18d712ef17eb8385157451b Update to latest git
 * Wed May 21 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - 44e3d07dfc6836929d81e808a269e3143054b233 Update to latest git
 * Sat May 17 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
