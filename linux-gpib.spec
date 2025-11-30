@@ -18,8 +18,8 @@
 %bcond_without tcl
 
 # https://sourceforge.net/p/linux-gpib/git/ci/4c820721bd53f11d509eee6724fb5df33b3614aa/tree/
-%global gitrev 55e1b4020509a891b90502828247c93da87de40d
-%global gitdate 20251008
+%global gitrev bef0c6131ec9b8128c50a12c183750563bacded7
+%global gitdate 20251130
 
 %global _hardened_build 1
 
@@ -43,7 +43,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        32.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        34.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -65,6 +65,9 @@ Source4:        %{name}-config-systemd
 Patch0:         %{name}-nodevnodes.patch
 # We package our own udev rules and firmware loader
 Patch1:         %{name}-remove-usb-autotools.patch
+# EPEL needs the compatible kernel headers altered
+Patch2:         %{name}-compat-timer.patch
+
 
 # The GPIB driver is scheduled to be in the mainline in 6.18
 #   prior to this version the dkms kernel module is required
@@ -262,6 +265,10 @@ HTML and PDF documentation for %{name}.
 
 %patch 0 -p1
 %patch 1 -p1
+
+%if 0%{?rhel} == 10
+%patch 2 -p1
+%endif
 
 pushd %{name}-kernel
 sed -e 's/__VERSION_STRING/%{version}/g' %{SOURCE3} > dkms.conf
@@ -681,6 +688,10 @@ fi
 
 
 %changelog
+* Sun Nov 30 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> 
+- bef0c6131ec9b8128c50a12c183750563bacded7 fix for build on epel10
+* Tue Nov 04 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> 
+- b0b8aef2f1bd7e5b9c93eb3a117f8edb667365a3 fix for DCAS on NI-USB-B driver
 * Wed Oct 08 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  
 - 55e1b4020509a891b90502828247c93da87de40d Update tolatest git
 * Tue Aug 26 2025 Michael Katzmann <vk2bea-at-gmail-dot-com>  

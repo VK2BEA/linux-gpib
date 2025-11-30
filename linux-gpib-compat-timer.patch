@@ -1,0 +1,11 @@
+--- a/linux-gpib-kernel/compat/include/linux/timer.h	2025-11-28 06:22:07.000000000 -0500
++++ b/linux-gpib-kernel/compat/include/linux/timer.h	2025-11-30 09:59:11.069303115 -0500
+@@ -42,7 +42,7 @@
+ #define timer_setup_on_stack(timer, func, flags) compat_timer_setup((timer), (func), (flags))
+ #define COMPAT_DESTROY_TIMER_ON_STACK(timer) do {} while(0)
+ 
+-#elif  LINUX_VERSION_CODE >= KERNEL_VERSION(6, 16, 0)
++#elif  LINUX_VERSION_CODE >= KERNEL_VERSION(6, 12, 0)
+ #define COMPAT_TIMER_ARG_TYPE  struct timer_list *
+ #define COMPAT_FROM_TIMER(var, callback_timer, timer_fieldname) \
+ 	container_of((struct timer_list *)(callback_timer), typeof(*var), timer_fieldname)
