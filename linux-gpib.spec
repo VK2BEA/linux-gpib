@@ -43,7 +43,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        34.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        35.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -688,6 +688,8 @@ fi
 
 
 %changelog
+* Sun Jan 11 2026 Michael Katzmann <vk2bea-at-gmail-dot-com> 
+- include xyphro_ugc driver in dkms configuration
 * Sun Nov 30 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> 
 - bef0c6131ec9b8128c50a12c183750563bacded7 fix for build on epel10
 * Tue Nov 04 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> 

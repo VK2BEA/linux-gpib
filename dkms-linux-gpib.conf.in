@@ -61,3 +61,7 @@ BUILT_MODULE_NAME[12]="fmh_gpib"
 BUILT_MODULE_LOCATION[12]="drivers/gpib/fmh_gpib/"
 DEST_MODULE_LOCATION[12]="/extra"
 
+BUILT_MODULE_NAME[12]="xyphro_ugc"
+BUILT_MODULE_LOCATION[12]="drivers/gpib/xyphro/"
+DEST_MODULE_LOCATION[12]="/extra"
+
