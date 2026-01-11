@@ -17,9 +17,9 @@
 %bcond_without python3
 %bcond_without tcl
 
-# https://sourceforge.net/p/linux-gpib/git/ci/4c820721bd53f11d509eee6724fb5df33b3614aa/tree/
-%global gitrev bef0c6131ec9b8128c50a12c183750563bacded7
-%global gitdate 20251130
+# https://sourceforge.net/p/linux-gpib/git/ci/eeb0307df9e2b53b17e488bac720e5139040b453/tree/
+%global gitrev eeb0307df9e2b53b17e488bac720e5139040b453
+%global gitdate 20260111
 
 %global _hardened_build 1
 
@@ -43,7 +43,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        35.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        36.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPLv2+
@@ -61,12 +61,10 @@ Source2:        %{name}-config@.service.in
 Source3:        dkms-%{name}.conf.in
 Source4:        %{name}-config-systemd
 
-# We don't need to mknod since we can let the driver and systemd take care of it
-Patch0:         %{name}-nodevnodes.patch
 # We package our own udev rules and firmware loader
-Patch1:         %{name}-remove-usb-autotools.patch
+Patch0:         %{name}-remove-usb-autotools.patch
 # EPEL needs the compatible kernel headers altered
-Patch2:         %{name}-compat-timer.patch
+Patch1:         %{name}-compat-timer.patch
 
 
 # The GPIB driver is scheduled to be in the mainline in 6.18
@@ -264,10 +262,9 @@ HTML and PDF documentation for %{name}.
 %setup -q -n %{name}-git-%{gitrev}
 
 %patch 0 -p1
-%patch 1 -p1
 
 %if 0%{?rhel} == 10
-%patch 2 -p1
+%patch 1 -p1
 %endif
 
 pushd %{name}-kernel
@@ -690,6 +687,7 @@ fi
 %changelog
 * Sun Jan 11 2026 Michael Katzmann <vk2bea-at-gmail-dot-com> 
 - include xyphro_ugc driver in dkms configuration
+- eeb0307df9e2b53b17e488bac720e5139040b453 remove now unnecessary patch
 * Sun Nov 30 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> 
 - bef0c6131ec9b8128c50a12c183750563bacded7 fix for build on epel10
 * Tue Nov 04 2025 Michael Katzmann <vk2bea-at-gmail-dot-com> 

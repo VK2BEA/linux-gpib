@@ -1,5 +1,5 @@
---- old/linux-gpib-user/configure.ac	2022-06-06 16:20:34.432280304 -0400
-+++ new/linux-gpib-user/configure.ac	2022-06-06 16:28:56.968945905 -0400
+--- old/linux-gpib-user/configure.ac	2026-01-11 15:22:07.510320997 -0500
++++ new/linux-gpib-user/configure.ac	2026-01-11 15:24:23.602278566 -0500
 @@ -232,10 +232,6 @@
  	language/php/TESTS/Makefile \
  	language/python/Makefile \
@@ -8,18 +8,17 @@
 -	usb/ni_usb_gpib/Makefile \
 -	usb/agilent_82357a/Makefile \
 -	usb/lpvo_usb_gpib/Makefile \
- 
- ])
- AC_OUTPUT
+ 	util/Makefile \
+ 	util/templates/Makefile \
 
---- old/linux-gpib-user/Makefile.am	2022-06-06 16:20:34.502280106 -0400
-+++ new/linux-gpib-user/Makefile.am	2022-06-06 16:29:22.492879236 -0400
+--- old/linux-gpib-user/Makefile.am	2026-01-11 15:22:07.510265693 -0500
++++ new/linux-gpib-user/Makefile.am	2026-01-11 15:25:04.025392592 -0500
 @@ -7,7 +7,7 @@
  #   the Free Software Foundation; either version 2 of the License, or
  #   (at your option) any later version.
  
--SUBDIRS = include lib drivers examples test doc language usb
-+SUBDIRS = include lib drivers examples test doc language 
+-SUBDIRS = include lib examples test doc language usb util
++SUBDIRS = include lib examples test doc language util
  
- EXTRA_DIST = etc util m4 README.HAMEG README.hp82335 bootstrap
+ EXTRA_DIST = etc m4 README.HAMEG README.hp82335 bootstrap
  
