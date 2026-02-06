@@ -18,8 +18,8 @@
 %bcond_without tcl
 
 # https://sourceforge.net/p/linux-gpib/git/ci/eeb0307df9e2b53b17e488bac720e5139040b453/tree/
-%global gitrev e6e13a0f349a3298ee2f689da969efd6e39f96c3
-%global gitdate 20260121
+%global gitrev 2ed668f7fb87b9498a6515230c95284eaef5756b
+%global gitdate 20260206
 
 %global _hardened_build 1
 
@@ -43,7 +43,7 @@
 
 Name:           linux-gpib
 Version:        4.3.7
-Release:        37.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
+Release:        38.%{gitdate}git%(expr substr "%{gitrev}" 1 8)%{?dist}
 Summary:        Linux GPIB (IEEE-488) userspace library and programs
 
 License:        GPL-2.0-or-later
@@ -685,6 +685,8 @@ fi
 
 
 %changelog
+* Fri Feb 06 2026 Michael Katzmann <vk2bea-at-gmail-dot-com> 
+- 2ed668f7fb87b9498a6515230c95284eaef5756b Suppress more errors when IB_NO_ERROR is set
 * Wed Jan 21 2026 Michael Katzmann <vk2bea-at-gmail-dot-com> 
 - e6e13a0f349a3298ee2f689da969efd6e39f96c3 INES PCI changes
 * Sun Jan 11 2026 Michael Katzmann <vk2bea-at-gmail-dot-com> 
